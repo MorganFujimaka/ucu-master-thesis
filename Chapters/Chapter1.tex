@@ -1,0 +1,57 @@
+
+\chapter{Introduction}
+
+\section{Motivation}
+
+\emph{Text simplification} deals with the problem of rewriting complex texts into a simpler language which is easier to read and understand. The main goal of text simplification is to reduce the linguistic complexity of a text while preserving its original information and meaning. Key factors that help to improve the readability of texts are the vocabulary, the length of the sentences and the syntactic structures which are present in the text. 
+
+Text simplification is an important task that has numerous potential practical applications. Simplification techniques can be used to make reading easier for a broader range of readers, including:
+
+\begin{itemize}
+    \item people with disabilities (\cite{Canning:2000:CGS:647238.720905}; \cite{carroll-etal-1999-simplifying}; \cite{Inui:2003:TSR:1118984.1118986});
+    \item people with low-literacy (\cite{de-belder-text-simplification-for-children}; \cite{Watanabe:2009:FRA:1621995.1622002});
+    \item language learners (\cite{allen-role-of-relative-clauses}; \cite{Petersen2007TextSF});
+    \item non-experts (\cite{Elhadad:2007:MLT:1572392.1572402}; \cite{Siddharthan:2010:RDC:1857999.1858142}).
+\end{itemize}
+
+
+Moreover, applying text simplification in a text pre-processing stage has been shown to improve the performance of many natural language processing (NLP) tasks, including:
+
+\begin{itemize}
+    \item relation extraction, the task of finding a relevant semantic relation between two given target entities in a sentence (\cite{Miwa:2010:ESS:1873781.1873870});
+    \item syntactic parsing, the task of finding structural relationships between words in a sentence \cite{jonnalagadda-etal-2009-towards});
+    \item semantic role labeling, the task of modeling the predicate-argument structure of a sentence (\cite{vickrey-koller-2008-sentence});
+    \item machine translation (\cite{stajner-popovic-2016-text});
+    \item text summarization (\cite{margarido}).
+\end{itemize}
+
+In this work, we focus on utilizing text simplification in \emph{online language learning}. Among others, this can help to automate the laborious manual process of writing \emph{Graded readers} --- books in which language style has been intentionally simplified to make it more accessible for foreign language learners. Graded readers are commonly composed for various levels from beginners to advanced and are graded for vocabulary, the complexity of grammar structures and also by the number of words. 
+
+Text simplification models in the literature are commonly designed to simplify texts in three aspects: 
+
+\begin{enumerate}
+    \item \textbf{lexical}, which assumes replacing complex words with simpler equivalents (\cite{Candido:2009:SAT:1609843.1609848}; \cite{glavas-stajner-2015-simplifying}; \cite{yatskar-etal-2010-sake}; \cite{biran-etal-2011-putting}; \cite{Devlin1998TheUO});
+    \item \textbf{syntactic}, which implies adjusting the structure of the sentences (\cite{Siddharthan2006}; \cite{filippova-strube-2008-dependency}; \cite{brouwers-etal-2014-syntactic}; \cite{DBLP:journals/kbs/ChandrasekarS97}; \cite{canning-simplification-of-newspaper-text});
+    \item \textbf{semantic}, which assumes text paraphrasing (\cite{kandula-health-content}).
+\end{enumerate}
+
+From the sentence perspective, simplification includes \textbf{splitting} (\cite{Siddharthan2006}; \cite{Petersen2007TextSF}; \cite{narayan-gardent-2014-hybrid}), \textbf{deletion and compression} (\cite{rush-etal-2015-neural}; \cite{Clarke:2006:MSC:1220175.1220223}; \cite{filippova-strube-2008-dependency}; \cite{filippova-etal-2015-sentence}; \cite{Knight02summarizationbeyond}), and \textbf{paraphrasing} (\cite{wubben-etal-2012-sentence}; \cite{nisioi-etal-2017-exploring}; \cite{Specia:2010:TCS:2128464.2128471}; \cite{Wang:2016:TSU:3016387.3016551}; \cite{coster-kauchak-2011-simple}).
+
+Most of the recent text simplification systems are based on the variations of \emph{sequence-to-sequence} (Seq2Seq) models that require parallel corpora for training (\cite{kajiwara-komachi-2016-building}; \cite{scarton-etal-2018-text}; \cite{zhang-lapata-2017-sentence}). Unfortunately, the scarcity of parallel data limits the scalability of this approach in application to different languages, domains, and output styles. Moreover, the \emph{Parallel Wikipedia Simplification} corpus, which has become the benchmark dataset for training and evaluating text simplification systems, is (a) prone to automatic sentence alignment errors, (b) contains a lot of inadequate simplifications and (c) poorly generalizes to other text styles (\cite{xu-etal-2015-problems}). 
+
+In contrast to sequence-to-sequence models, \emph{unsupervised learning algorithms} do not require labeled parallel corpora. In a nutshell, they can learn to decompose a given text into in vector representations of its content and its style and, further, generate the same content in a simplified language.
+
+\section{Goals of the master thesis}
+
+The focus of this current thesis is on unsupervised text simplification which has been significantly less studied in the literature. To this end, we aim to: 
+\begin{enumerate}
+  \item Attest the feasibility of applying unsupervised learning (i.e., neural style transfer) to the problem of text simplification by applying cross-lingual language modeling.
+  \item Conduct its comprehensive evaluation over a variety of datasets and metrics and in comparison to the existing supervised baselines.
+  \item Introduce beam search generation penalties for better control and results.
+  \item Investigate directions to improve the performance of the proposed approach through better architectures of the neural network and training regimes.
+\end{enumerate}
+
+\section{Structure of the thesis}
+
+In Chapter \ref{chap:related_works} we review the background and literature related to the task of text simplification. Chapter \ref{chap:evaluation} focuses on the evaluation methodology and discusses the pros and cons of different existing evaluation metrics. In Chapter \ref{chap:datasets} we describe the datasets utilized in the rest of the thesis. Chapters \ref{chap:methodology} and \ref{chap:experiments} provide details on the methodology of our work and a detailed overview of the conducted experiments. Last but not least, in Chapter \ref{chap:conclusion} we sum up our results and contributions and outline directions for future research.  
+\endinput

@@ -1,0 +1,37 @@
+\chapter{Conclusion}
+\label{chap:conclusion}
+
+\section{Summary of contributions}
+
+In this work we considered the task of sentence simplification in an unsupervised and semi-supervised fashion and made the following contributions:
+
+\begin{enumerate}
+    \item To the best of our knowledge, our work is the first attempt to apply cross-lingual language modeling to the text simplification problem.
+    \item We introduced regularisation penalties for beam search generation to control exact matches, length and FKGL score of a simplified sentence. This gave us an increase of SARI by 2.64 and FKGL by 1.99 points on the Newsela dataset and improved SARI by 6.19 and FKGL by 2.07 points on the Wikilarge dataset with the semi-supervised approach.
+    \item In comparison to previous work in this direction, we have conducted a more comprehensive evaluation by using a larger variety of simplification metrics.
+    \item We collected a brand new 1,500,000 sentences monolingual dataset and applied it to unsupervised training steps which yielded an additional increase of 1.53 points in BLEU score on the Newsela dataset and 2.08 points on the Wikilarge dataset with the unsupervised approach. 
+\end{enumerate}
+
+Overall, we developed two approaches for text simplification using cross-lingual language modeling. The first one is completely unsupervised. The second one is semi-supervised, which uses a small parallel corpus of 5,000 sentences in addition to a much large monolingual one. The unsupervised approach gave us the best BLEU score on the Wikilarge dataset, whereas the semi-supervised demonstrated the best SARI and FKGL scores on the Newsela dataset, therefore improving the state-of-the-art results by a margin of 9.08\%, 43.93\%, and 10.72\%, correspondingly. 
+
+
+\section{Directions for future research}
+
+One of the most promising directions for future research we see in devising larger and higher quality monolingual datasets. Specifically, we believe that this research will benefit from the new text corpora with a broader variety of FKGL grades between the source and the target sentences, better-simplified vocabularies in the output and a sufficient amount of training examples with sentence splitting (i.e., when a single complex sentence is split into multiple simpler ones) which often provide a better simplification output.      
+
+Another interesting related problem lies in generating simplifications with tune-able grade levels. There are multiple ways to achieve this, for instance, by training separate models for different grade levels; weighing or constraining the proposed FKGL penalty by the required output grade level; etc. We also consider controlling the output "simplified" vocabulary by either introducing a penalty for utilizing less commonly used words or relaxing the constraint on using shared representations for simplified and original languages in the decoding architecture. 
+
+Last but not least, we believe that the future research in this direction will benefit from a better evaluation of the grammaticality of the generated simplifications by either conducting a human review of the output or by analyzing its semantic decomposition.  
+
+%Amongst the most promising directions for future research we have identified: 
+
+%\begin{enumerate}
+%    \item Adding grammaticality metrics for evaluation. 
+%    \item Collecting a larger high-quality monolingual dataset that will have larger FKGL difference between the source and the target sentences, much lower vocabulary for target set and sufficient amount of examples of sentence splitting. 
+%    \item Control grade level. There are multiple options to do that: train separate models for different grade levels, add less FKGL penalty to beam search generation for  higher grade levels, not allow FKGL score be less than required grade level. 
+%    \item Implement usage of separate "simple" vocabulary for simplified sentence generation. Currently, XLM uses shared vocabulary to improve the alignment of embedding spaces across languages.
+%\end{enumerate}
+
+
+
+\endinput

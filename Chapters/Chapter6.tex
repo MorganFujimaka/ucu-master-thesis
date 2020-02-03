@@ -1,0 +1,272 @@
+\chapter{Experiments}
+\label{chap:experiments}
+
+We performed our experiments on the XLM model described in Section \ref{sec:xlm}. The baseline unsupervised XLM models trained on Newsela and Wikilarge datasets gave us encouraging results in comparison with the supervised models from the literature. Further improvements achieved by adding limited supervised Machine translation (MT) step, new monolingual corpora and modified beam search generation led us to the best SARI result on Newsela dataset and the best BLEU result on Wikilarge dataset. 
+
+
+\section{Comparison models}
+
+We compared the performance of our model against multiple others mentioned in Chapter \ref{chap:related_works}. \emph{PBMT-R} is phrase-based machine translation system with a re-ranking post-processing step proposed by \cite{wubben-etal-2012-sentence}. \emph{Hybrid} is a simplification model that includes a probabilistic model for splitting and dropping and a PBMT-R model for substitution and reordering (\cite{narayan-gardent-2014-hybrid}). \emph{SBMT-SARI} is a syntax-based translation model trained on PPDB (\cite{ganitkevitch-etal-2013-ppdb}) and trained with SARI (\cite{zhang-lapata-2017-sentence}). \emph{EncDecA}, a basic attention-based encoder-decoder model, \emph{DRESS}, a deep reinforcement learning model, \emph{DRESS-LS}, a linear combination of DRESS and the lexical simplification model, all of them were introduced in \cite{zhang-lapata-2017-sentence}. \emph{DMASS+DCSS} is a combination of DMASS and DCSS models from \cite{zhao2018integrating} (Section \ref{sec:from_lstm_to_transformers}).
+
+The BLEU, SARI and FKGL results for the above-mentioned models were taken from \cite{zhang-lapata-2017-sentence} and \cite{zhao2018integrating}. For the models introduced in Chapter \ref{chap:methodology} we also report Exact matches, Addition and Deletion ratios which provide additional insights into performance of simplification systems.
+
+\begin{table}
+\centering
+\begin{tabular}{m{4.5cm}cccccc}
+\hline
+\textbf{} & \textbf{BLEU} & \textbf{SARI} & \textbf{FKGL} & \textbf{Exact Match} & \textbf{Add.} & \textbf{Del.} \\
+\hline
+PBMT-R & 18.19 & 15.77 & 7.59 & - & - & - \\
+Hybrid & 14.46 & 30.00 & 4.01 & - & - & - \\
+EncDecA & 21.7.0 & 24.12 & 5.11 & - & - & - \\
+DRESS & 23.21 & 27.37 & 4.13 & - \\
+DRESS-LS & \textbf{24.30} & 26.63 & 4.21 & - & - & - \\
+DMASS+DCSS  & - & 27.28 & 5.17 & - & - & - \\
+XLM & 16.97 & 19.32 & 10.52 & 0.46 & 0.04 & 0.05 \\
+XLM (News/SW-CBT) & 18.50 & 12.94 & 10.36 & 0.97 & 0.00 & 0.00 \\
+XLM (News/SW-CBT, penalized beam) & 18.34 & 13.49 & 8.46 & 0.72 & 0.01 & 0.00 \\
+XLM (MT) & 19.44 & \textbf{43.18} & 4.18 & 0.09 & 0.12 & 0.53 \\
+XLM (MT, News/SW-CBT) & 19.33 & 39.60 & 5.57 & 0.21 & 0.10 & 0.45 \\
+XLM (MT, News/SW-CBT, penalized beam) & 16.56 & 42.24 & \textbf{3.58} & 0.04 & 0.1 & 0.6  \\
+\hline
+Output = Source & 18.52 & 12.78 & 10.36 & 1.00 & 0.00 & 0.00 \\
+Output = Target & 100.00 & 100.00 & 4.18 & 0.00 & 0.19 & 0.61 \\
+\end{tabular}
+\caption{Automatic evaluation on Newsela test set. Source: \cite{zhang-lapata-2017-sentence}, \cite{zhao2018integrating}.}
+\label{tab:newsela-results}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{m{4.5cm}cccccc}
+\hline
+\textbf{} & \textbf{BLEU} & \textbf{SARI} & \textbf{FKGL} & \textbf{Exact Match} & \textbf{Add.} & \textbf{Del.} \\
+\hline
+PBMT-R & 81.11 & 38.56 & 8.33 & - & - & - \\
+Hybrid & 48.97 & 31.40 & \textbf{4.56} & - & - & - \\
+SBMT-SARI & 73.08 & 39.96 & 7.29 & - & - & - \\
+EncDecA & 88.85 & 35.66 & 8.41 & - & - & - \\
+DRESS & 77.18 & 37.08 & 6.58 & - & - & - \\
+DRESS-LS & 80.12 & 37.27 & 6.62 & - & - & - \\
+DMASS+DCSS  & - & \textbf{40.42} & 7.18 & - & - & - \\
+UNTS+10K & 76.13 & 35.29 & - & - & - & - \\
+XLM & 94.83 & 28.30 & 9.75 & 0.76 & 0.02 & 0.01 \\
+XLM (News/SW-CBT) & \textbf{96.91} & 28.00 & 9.94 & 0.93 & 0.00 & 0.00 \\
+XLM (News/SW-CBT, penalized beam) & 94.95 & 30.03 & 9.82 & 0.45 & 0.01 & 0.03 \\
+XLM (MT) & 92.66 & 30.99 & 9.68 & 0.73 & 0.02 & 0.02 \\
+XLM (MT, News/SW-CBT) & 96.05 & 29.44 & 9.81 & 0.89 & 0.01 & 0.02 \\
+XLM (MT, News/SW-CBT, penalized beam) & 76.93 & 35.63 & 7.74 & 0.3 & 0.04 & 0.26 \\
+XLM (MT, Newsela) & 3.63 & 31.80 & 6.24 & 0.01 & 0.17 & 0.44 \\
+\hline
+Output = Source & 97.41 & 27.32 & 9.90 & 1.00 & 0.00 & 0.00 \\
+Output = Target & 68.87 & 40.83 & 8.33 & 0.00 & 0.19 & 0.21 \\
+\end{tabular}
+\caption{Automatic evaluation on Wikilarge test set. Source: \cite{zhang-lapata-2017-sentence}, \cite{zhao2018integrating}, \cite{surya-etal-2019-unsupervised}.}
+\label{tab:wikilarge-results}
+\end{table}
+
+\section{Unsupervised approach}
+
+Our baseline XLM models were trained following completely unsupervised approach. The model trained on Newsela dataset showed good results on all metrics apart from FKGL. It also has high Exact matches ratio and low Addition and Deletion ratios (Table \ref{tab:newsela-results}) suggesting that the model chose a conservative strategy of copying source sentences in many cases. 
+
+The model trained on Wikilarge dataset showed an excellent BLEU score. Such a "good" performance is explained by high Exact matches ratio of 0.93 (Table \ref{tab:wikilarge-results}). Due to the nature of Wikilarge dataset (Section \ref{sec:newsela-dataset}) a model can just duplicate the input and it will obtain a very high BLEU score.
+
+\subsection{Adding larger monolingual corpus}
+
+Since Newsela and Wikilarge are not very large datasets, a possible option to improve the performance of the model was to train the baseline XLM model on larger monolingual corpora. Therefore, we trained the baseline model on the SW-CBT dataset which has about 1,500,000 sentences (described in Section \ref{dataset:sw-cbt}) and evaluated it on the Newsela and Wikilarge test sets. The resulting \emph{XLM (News/SW-CBT)} model has also featured a tendency to copy the input which, as in the case with XLM model, we have regularized later in this chapter by introducing a supervised MT step (Table \ref{tab:newsela-results}). 
+
+\subsection{Adding larger monolingual corpus and penalized beam search}
+
+For Newsela, adding penalization worked well and reduced FKGL from 10.36 to 8.46 points and the Exact matches ratio from 0.97 to 0.72 with a slight improvement of SARI. As for Wikilarge, SARI increased from 28 to 30.03, FKGL dropped from 9.94 to 9.82 points, Exact matches ratio plunged from 0.93 to 0.45. The BLEU score worsened a little for both datasets.
+
+\section{Adding limited supervision}
+
+By adding an MT step with just 5,000 parallel sentences, we helped the model trained on Newsela dataset to learn to remove redundant information. This has dramatically improved the performance of the model. The \textbf{SARI score skyrocketed from 23.29 to 43.18} points, \textbf{FKLG dropped from 10.39 to 4.18} and Deletion ratio increased almost 7-fold alongside with the three-times drop in Exact matches ratio (Table \ref{tab:newsela-results}). 
+
+To ensure that the obtained results are not due to a statistical error we conducted a repeated random sub-sampling validation. We created 10 random splits of the dataset into training and test data (Table \ref{tab:newsela-sub-sampling}). The mean scores over the splits gave a Deletion ratio of 0.53 out of the best possible 0.61 points\footnote{{Best possible is achieved when simplified sentences equal target ones.}}. Along with this, we obtained the best SARI score of 43.18 among all simplification models known to us.
+
+For Wikilarge, additional MT step gave a little improvement in terms of SARI and FKGL scores but reduced the BLEU result (Table \ref{tab:wikilarge-results}).
+
+\begin{table}
+\centering
+\begin{tabular}{m{3cm}cccccc}
+\hline
+\textbf{} & \textbf{BLEU} & \textbf{SARI} & \textbf{FKGL} & \textbf{Matches} & \textbf{Add.} & \textbf{Del.} \\
+\hline
+XLM (MT) \#0 & 18.25 & 43.33 & 4.17 & 0.07 & 0.14 & 0.53 \\
+XLM (MT) \#1 & 20.27 & 43.39 & 4.11 & 0.08 & 0.11 & 0.53 \\
+XLM (MT) \#2 & 19.09 & 43.23 & 3.91 & 0.08 & 0.12 & 0.55  \\
+XLM (MT) \#3 & 18.58 & 43.30 & 3.94 & 0.08 & 0.14 & 0.56 \\
+XLM (MT) \#4 & 20.78 & 43.44 & 4.37 & 0.07 & 0.12 & 0.53 \\
+XLM (MT) \#5 & 17.35 & 42.96 & 3.97 & 0.08 & 0.14 & 0.56 \\
+XLM (MT) \#6 & 19.22 & 42.77 & 4.15 & 0.08 & 0.12 & 0.54 \\
+XLM (MT) \#7 & 20.07 & 43.36 & 4.30 & 0.10 & 0.11 & 0.52 \\
+XLM (MT) \#8 & 20.23 & 42.52 & 4.82 & 0.13 & 0.11 & 0.47 \\
+XLM (MT) \#9 & 20.58 & 43.45 & 4.06 & 0.10 & 0.11 & 0.52 \\
+\hline
+Mean & 19.44 & 43.18 & 4.18 & 0.09 & 0.12 & 0.53 \\
+Variance & 1.28 & 0.10 &  0.07 & 0.00 & 0.00 & 0.00 \\
+\end{tabular}
+\caption{Repeated random sub-sampling validation on Newsela train and test sets.}
+\label{tab:newsela-sub-sampling}
+\end{table}
+
+\subsection{Adding larger monolingual corpus}
+
+XLM model trained on SW-CBT dataset with an MT step and evaluated on both Newsela and Wikilarge demonstrated a worsening of almost all metrics (Tables \ref{tab:newsela-results} and \ref{tab:wikilarge-results}) with clear commitment to copy source sentences. 
+
+\subsection{Adding monolingual corpus and penalized beam search}
+
+To address the issue with the input copying by the XLM (MT, News/SW-CBT) model, we again used the beam search penalties. For Newsela, this drastically reduced the Exact matches ratio from 0.21 to 0.04 and \textbf{FKGL from 5.57 to 3.58}. Thus we obtained \textbf{much better FKGL score than the previous best result of 4.01 points by the Hybrid model} (Table \ref{tab:newsela-results}). 
+
+As for Wikilarge, this additional regularisation markedly improved all metrics except of BLEU. A dramatically improved Deletion ratio had negative effect on it. BLEU doesn't encourage shorter sentences (Section \ref{sec:bleu}) and, hence it reduced its score from 96.05 to 78.01 (Table \ref{tab:wikilarge-results}). Table \ref{tab:wikilarge-beam} presents some good examples of improvements in comparison with the XLM (MT) model.
+
+
+\section{Trained on Newsela, evaluated on Wikilarge}
+
+Since we obtained good result on Newsela dataset, we decided to evalute Wikilarge test set on XLM (MT) model trained on Newsela dataset. XLM (MT, Newsela) model received extremely low BLEU score of 3.63 due to increased Deletion ratio of 0.44 points. More importantly, XLM (MT, Newsela) model was able to get low enough FKGL score (Table \ref{tab:wikilarge-results}).
+
+
+\begin{table}
+\centering
+\begin{tabular}{m{2cm}m{12cm}}
+\hline
+Source & {\fontfamily{pcr}\selectfont There’s just one major hitch: the primary purpose of education is to develop citizens with a wide variety of skills.} \\
+\\
+Target & {\fontfamily{pcr}\selectfont The purpose of education is to develop a wide \textbf{range} of skills.} \\
+\\
+PBMT-R & {\fontfamily{pcr}\selectfont It’s just one major hitch: the purpose of education is to \textbf{make people} with a wide variety of skills.} \\
+\\
+Hybrid & {\fontfamily{pcr}\selectfont one hitch the purpose is to develop citizens.} \\
+\\
+EncDecA & {\fontfamily{pcr}\selectfont The \textbf{key} of education is to develop \textbf{people} with a wide variety of skills.} \\
+\\
+DRESS & {\fontfamily{pcr}\selectfont There’s just one major hitch: the \textbf{main goal} of education is to develop \textbf{people} with \textbf{lots of} skills.} \\
+\\
+DRESS-LS & {\fontfamily{pcr}\selectfont There’s just one major hitch: the \textbf{main goal} of education is to develop citizens with \textbf{lots of} skills.} \\
+\\
+XLM (MT) & {\fontfamily{pcr}\selectfont There's just one \textbf{big} hitch: the primary purpose of education is to develop citizens with a wide \textbf{range} of skills.} \\
+\hline
+\end{tabular}
+\caption{System outputs on Newsela dataset. Source: \cite{zhang-lapata-2017-sentence}.}
+\label{tab:newsela-output-refs}
+\end{table}
+
+
+\section{Newsela outcomes}
+
+In the Table \ref{tab:newsela-output-refs} we can see how different models simplify a sentence from the Newsela dataset. Our XLM (MT) model is the only one which replaced {\fontfamily{pcr}\selectfont variety of skills} with {\fontfamily{pcr}\selectfont range of skills} as the target version did, but it was unable to make the sentence shorter. The worst simplification seems to be provided by Hybrid model. Even though it is the shortest one it does not make any sense. 
+
+The best simplifications according to SARI are presented in Table \ref{tab:newsela-best-sari}. In the first example the model made a simplification exact to target, while in the second example is was very close.
+
+\begin{table}
+\centering
+\begin{tabular}{m{2cm}m{12cm}}
+\hline
+Source & {\fontfamily{pcr}\selectfont Florida sees more stranded whales than \textbf{another} state, \textbf{followed by California}.} \\
+\\
+Target & {\fontfamily{pcr}\selectfont Florida sees more stranded whales than \textbf{any other} state.} \\
+\\
+XLM (MT) & {\fontfamily{pcr}\selectfont Florida sees more stranded whales than \textbf{any other} state.} \\
+\hline
+Source & {\fontfamily{pcr}\selectfont Sage Kotsenburg, one of White's Olympic \textbf{teammates, called the modified course "sick" - a compliment, in this world}.} \\
+\\
+Target & {\fontfamily{pcr}\selectfont Sage Kotsenburg \textbf{is} one of White's Olympic \textbf{teammates}.} \\
+\\
+XLM (MT) & {\fontfamily{pcr}\selectfont Sage Kotsenburg \textbf{is} one of White's Olympic athletes.} \\
+\hline
+\end{tabular}
+\caption{Best simplifications on Newsela dataset according to SARI.}
+\label{tab:newsela-best-sari}
+\end{table}
+
+Sometimes XLM (MT) model overdo it with the sentence compression. A good example of such behavior is presented in Table \ref{tab:newsela-best-compression}.
+
+\begin{table}
+\centering
+\begin{tabular}{m{2cm}m{12cm}}
+\hline
+Source & {\fontfamily{pcr}\selectfont \textbf{Making the site even more significant, they say, is the fact that Carr's team has also uncovered artifacts and other elements from two later historic structures sandwiched over the Tequesta village at the site - a well and artifacts from Fort Dallas, a mid-19th century military fortification used during two of the Seminole Indian wars, and brick column bases and other traces of Flagler's hotel, which prompted the founding of the city of Miami}.} \\
+\\
+Target & {\fontfamily{pcr}\selectfont Carr's team has \textbf{found other} artifacts \textbf{there}. \textbf{Two building were} later \textbf{constructed on top of} the village.} \\
+\\
+XLM (MT) & {\fontfamily{pcr}\selectfont \textbf{The} team \textbf{found some important pieces}.} \\
+\hline
+\end{tabular}
+\caption{Simplification with the most compression on Newsela dataset.}
+\label{tab:newsela-best-compression}
+\end{table}
+
+One of the key properties of good simplification models is their ability to split long sentences into smaller ones. XLM (MT) tries to do that but could not boast of much success (Table \ref{tab:newsela-split}).
+
+\begin{table}
+\centering
+\begin{tabular}{m{2cm}m{12cm}}
+\hline
+Source & {\fontfamily{pcr}\selectfont \textbf{Entering, for instance, museum-goers} will cross a \textbf{water feature} to \textbf{recall} the \textbf{experience of slaves crossing the ocean} to \textbf{come to} America.} \\
+\\
+Target & {\fontfamily{pcr}\selectfont \textbf{Museum-goers} will \textbf{enter the building across} a \textbf{body of water}.} \\
+\\
+XLM (MT) & {\fontfamily{pcr}\selectfont \textbf{Visitors} will cross a \textbf{waterway} to \textbf{see} the \textbf{story}. \textbf{Visitors will walk a waterway} to America.} \\
+\hline
+\end{tabular}
+\caption{Simplification with sentence split on Newsela dataset.}
+\label{tab:newsela-split}
+\end{table}
+
+On the other hand, for some sentences XLM (MT) simplifies better by making an output sentence longer than the input one. (Table \ref{tab:newsela-longer}).
+
+\begin{table}
+\centering
+\begin{tabular}{m{2cm}m{12cm}}
+\hline
+Source & {\fontfamily{pcr}\selectfont The \textbf{notion} that Snowden had no \textbf{option} but to leak is indefensible.} \\
+\\
+Target & {\fontfamily{pcr}\selectfont \textbf{But, the} notion that Snowden had no \textbf{choice} but to leak \textbf{secrets} is indefensible.} \\
+\\
+XLM (MT) & {\fontfamily{pcr}\selectfont The \textbf{idea} that Snowden had no \textbf{choice} but to leak \textbf{the information} is indefensible.} \\
+\hline
+\end{tabular}
+\caption{Simplification that is longer than the source on Newsela dataset.}
+\label{tab:newsela-longer}
+\end{table}
+
+Newsela contains high quality simplifications created by professional editors, thus it is not easy to teach a model to do right simplifications. It is not enough just to copy the input (but we will see that this may be a good strategy on Wikilarge dataset). The target simplifications contain a large ratio of addition (0.19) and deletion (0.61). We believe that the larger corpora based on Newsela articles may remarkably improve the results.
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{m{2.8cm}m{10cm}}
+\hline
+Source & {\fontfamily{pcr}\selectfont Brighton is a city in Washington county, Iowa, United States.} \\
+\\
+Target & {\fontfamily{pcr}\selectfont Brighton is a city \textbf{of} Iowa \textbf{in the} United States.} \\
+\\
+XLM (MT) & {\fontfamily{pcr}\selectfont Brighton is a city in Washington county, Iowa, United States.} \\
+\\
+XLM (MT, \newline penalized beam) & {\fontfamily{pcr}\selectfont Brighton is a city \textbf{of} Iowa \textbf{in the} United States.} \\
+\hline
+Source & {\fontfamily{pcr}\selectfont Despina was discovered in late July, 1989 from the images taken by the Voyager 2 probe.} \\
+\\
+Target & {\fontfamily{pcr}\selectfont Despina was \textbf{found} in late July, 1989 from the images taken by the Voyager 2 probe.} \\
+\\
+XLM (MT) & {\fontfamily{pcr}\selectfont Despina was discovered in late July, 1989 from the images taken by the Voyager 2 probe.} \\
+\\
+XLM (MT, \newline penalized beam) & {\fontfamily{pcr}\selectfont Despina was \textbf{found} in late July, 1989 from the images taken by the Voyager 2 probe.} \\
+\hline
+\end{tabular}
+\caption{Penalized beam search helps to overcome a problem when the system copies input on Wikilarge dataset.}
+\label{tab:wikilarge-beam}
+\end{table}
+
+\section{Summary}
+
+We conducted our experiments following unsupervised and semi-supervised methods, i.e., by adding supervised MT step trained on parallel corpora. We attested two strategies to improve performance. The first one lied in training the model on a large monolingual corpus with penalized beam search generation. The second one consisted of adding limited supervision through a Machine translation step trained on 5,000 parallel sentences.
+
+For the Newsela, the first strategy improved BLEU and FKGL scores but had a negative impact on SARI and Exact matches ratio. The MT step, in its turn, dramatically improved all the metrics giving the best SARI and FKGL scores among all the models known to us. 
+
+As for Wikilarge, the SW-CBT dataset makes it possible to obtain an unprecedented BLEU score while slightly reducing other metrics. With respect to the second strategy, the most noticeable improvement was reached by XLM (MT, News/SW-CBT, penalized beam) model (Tables \ref{tab:newsela-results} and \ref{tab:wikilarge-results}).
+
+In general, we noticed that adding a large monolingual SW-CBT dataset had a positive impact on BLEU scores, while MT step highly improves SARI and FKGL results.
+
+\endinput

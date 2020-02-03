@@ -1,0 +1,67 @@
+\chapter{Datasets description}
+\label{chap:datasets}
+
+We conducted our experiments on three different simplification datasets, the summary statistics of which are presented in Table \ref{tab:datasets}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{m{5cm}ccc}
+\hline
+\textbf{} & \textbf{WikiLarge} & \textbf{Newsela} & \textbf{News Crawl/SW-CBT} \\
+\hline
+Source (monolingual) & 291,402 & 81,705 & 1,500,000 \\
+Target (monolingual) & 291,402 & 76,073 & 1,489,778 \\
+Train set & 5,000 & 5,000 & - \\
+Validation set & 2,000 & 1,500 & - \\
+Test set & 359 & 1,500 & - \\
+Vocab source  & 41,303 & 33,316 & 43,222 \\
+Vocab target & 39,912 & 22,405 & 49,118 \\
+Compression ratio & 0.98 & 0.76 & 1.21 \\
+Sentence splits & 1.09 & 1.01 & 0.99 \\
+FKGKL (source) & 9.51 & 8.51 & 7.89 \\
+FKGKL (target) & 6.33 & 2.86 & 5.46 \\
+\hline
+\end{tabular}
+\caption{Datasets.}
+\label{tab:datasets}
+\end{table}
+
+\section{WikiLarge}
+
+The \emph{Parallel Wikipedia Simplification} (PWKP) corpus introduced by \cite{zhu-etal-2010-monolingual} has become a benchmark for training and evaluating text simplification models. It constitutes a collection of parallel sentences from the English Wikipedia\footnote{\href{https://en.wikipedia.org/}{https://en.wikipedia.org/}} and Simple English Wikipedia\footnote{\href{https://simple.wikipedia.org/}{https://simple.wikipedia.org/}}. Simple English Wikipedia is an online encyclopedia aimed at children and adults who are learning the English language. Its articles contain fewer words and simpler grammar than those in English Wikipedia.
+
+WikiLarge is a Wikipedia corpus constructed by \cite{zhang-lapata-2017-sentence}. It is a combination of three datasets:
+
+\begin{itemize}
+    \item PWKP (\cite{zhu-etal-2010-monolingual}), the dataset described above;
+    \item aligned sentence pairs from \cite{Kauchak2013ImprovingTS};
+    \item aligned and revisioned sentence pairs from \cite{Woodsend2011LearningTS}.
+\end{itemize}
+
+Originally it had 296,402 sentence pairs but we took 5,000 pairs for machine translation step during our model training (see Chapter \ref{chap:experiments} for details). For validations and tests, we used datasets created by \cite{xu-etal-2016-optimizing}. They consist of complex sentences from the WikiSmall dataset aligned with simplifications provided by \emph{Amazon Mechanical Turk}~\footnote{\href{https://www.mturk.com/}{https://www.mturk.com/}}. Each original sentence in the dataset has 8 simplified references. See Table \ref{tab:datasets} for details.
+
+\section{Newsela}
+\label{sec:newsela-dataset}
+
+\emph{Newsela} dataset was introduced by \cite{xu-etal-2015-problems}. The authors argued that Wikipedia as a simplification data resource is sub-optimal because it is prone to automatic sentence alignment errors, contains a large proportion of inadequate simplifications and it generalizes poorly to other text genres.
+
+Newsela is a platform that provides reading materials for classroom usage\footnote{\href{https://newsela.com/}{https://newsela.com/}}. On request, they provide a corpus that includes thousands of news articles professionally leveled to different reading complexities. For every original sentence (Version 0) there are 4 or 5 simplified versions (Version 5 or 6 being the simplest).
+
+We used the most contrast article versions: 0-level for a source dataset and 4-level for a target dataset. For the machine translation step, for the test, and for the validation datasets we used parallel complex-simple pairs provided by \cite{xu-etal-2015-problems}. See Table \ref{tab:datasets} for details.
+
+\section{News Crawl and SimpleWiki with Children's Books Test}
+\label{dataset:sw-cbt}
+
+To test the performance of our model on a corpus of different styles and sizes we collected our own datasets for training and used the Wikilarge and the Newsela sets for the machine translation step, test and validation.
+
+As a source "complex" monolingual dataset we used 1,500,000 sentences from the WMT 2014 News Crawl\footnote{\href{http://statmt.org/wmt14/training-monolingual-news-crawl/}{http://statmt.org/wmt14/training-monolingual-news-crawl/}}, a dataset consisting of text crawled from online news. For target "simple" dataset we combined sentences from SimpleWiki (SW)\footnote{\href{https://dumps.wikimedia.org/simplewiki/latest/}{https://dumps.wikimedia.org/simplewiki/latest/}} with the Children's Books Test (CBT) from \cite{Hill2015TheGP}. The CBT is built from children books freely provided by Project Gutenberg \footnote{\href{https://gutenberg.org/}{https://gutenberg.org/}}. After removing duplicates from the SW-CBT dataset, the resulting target monolingual dataset contains 1,489,778 sentences. See Table \ref{tab:datasets} for details.
+
+
+\section{Data Pre-processing}
+
+For data pre-processing we used a script provided by XLM model\footnote{\href{https://github.com/facebookresearch/XLM/blob/master/get-data-nmt.sh}{https://github.com/facebookresearch/XLM/blob/master/get-data-nmt.sh}}. It uses Moses\footnote{\href{http://www.statmt.org/moses/}{http://www.statmt.org/moses/}} to replaces Unicode punctuation, normalize it, remove non-printing characters and tokenize the data. Then it uses fastBPE\footnote{\href{https://github.com/glample/fastBPE}{https://github.com/glample/fastBPE}} to apply 60,000 BPE (Byte Pair Encoding) codes\footnote{\href{https://dl.fbaipublicfiles.com/XLM/codes_enfr}{https://dl.fbaipublicfiles.com/XLM/codes\_enfr}} to monolingual and parallel test data. These BPE codes were learned during the training of the pre-trained XLM model which we use for our experiments. Finally, the script generates the same shared vocabulary through the BPE codes to improve the alignment of embedding spaces across languages.
+
+\bigskip
+In this chapter, we described Wikilarge and Newsela datasets which became benchmarks for the evaluation of text simplification systems. Furthermore, we introduced our own monolingual dataset based on News Crawl, SimpleWiki and Children Books Test. Vocabulary size, compression ratio, and FKGL score prove once again the high quality of the Newsela dataset.
+
+\endinput
